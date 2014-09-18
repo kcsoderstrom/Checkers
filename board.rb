@@ -1,5 +1,5 @@
-require_relative "game"
-require_relative 'piece' #might not need this wedk
+require_relative 'game'
+require_relative 'piece'
 require_relative 'cursor'
 require_relative 'chars_array'
 require_relative 'plane_like'
@@ -67,44 +67,32 @@ class Board
   end
 
   def jump(start, end_pos, color)
-    raise_move_errors(start, end_pos, color)
-
     self.take(start, end_pos)
-
-    self[start].move(end_pos)
-
-    moved_piece = self[end_pos]
-
-    unless moved_piece.is_a?(King) || !moved_piece.at_end?
-      moved_piece = King.new(self, moved_piece.color, moved_piece.pos)
-    end
 
     if self[end_pos].jump_moves.empty?
       self.end_of_turn = true
       self.prev_pos = nil
-    else
+    else                                # For double-jumps
       self.end_of_turn = false
       self.prev_pos = end_pos
     end
   end
 
   def slide(start, end_pos, color)
+    self.end_of_turn = true
+    self.prev_pos = nil     #deselects cursor #probably should rename
+  end
+
+  def move(start, end_pos, color)
     raise_move_errors(start, end_pos, color)
 
-    self[start], self[end_pos] = nil, self[start]
-
-    moved_piece = self[end_pos]
-    moved_piece.move(end_pos)      #this seems stupid
+    moved_piece = self[start]
+    moved_piece.move(end_pos)
 
     unless moved_piece.is_a?(King) || !moved_piece.at_end?
       moved_piece = King.new(self, moved_piece.color, moved_piece.pos)
     end
 
-    self.end_of_turn = true
-    self.prev_pos = nil     #deselects cursor
-  end
-
-  def move(start, end_pos, color)
     if jump?(start, end_pos)
       jump(start, end_pos, color)
     else
@@ -186,8 +174,8 @@ class Board
     str << black_chars.take(8).join << "\n"
     str << black_chars.drop(8).join << "\n"
 
-    str << "White Current Time: #{clock.convert_times[0]} \t" <<
-           "White Total Time: #{clock.convert_times[1]}\n" <<
+    str << "Red Current Time: #{clock.convert_times[0]} \t" <<
+           "Red Total Time: #{clock.convert_times[1]}\n" <<
            "Black Current Time: #{clock.convert_times[2]} \t" <<
            "Black Total Time: #{clock.convert_times[3]}"
     str

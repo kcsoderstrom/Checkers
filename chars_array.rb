@@ -21,14 +21,12 @@ class CharsArray
     highlight_squares
   end
 
-  def highlight_squares     #horrible names errywhere
+  def highlight_squares
     unless board.selected_piece.nil?
       hold_highlight_on_selected_piece
       highlight_available_moves(board.selected_piece)
-      highlight_cursor
-    else
-      highlight_cursor
     end
+    highlight_cursor
   end
 
   def hold_highlight_on_selected_piece
@@ -44,7 +42,7 @@ class CharsArray
 
   def highlight_cursor
     pos = board.cursor.pos
-    self[pos] = self[pos].colorize(:background => :white)
+    self[pos] = self[pos].colorize(:background => :light_white)
   end
 
   def convert_without_highlight
