@@ -27,73 +27,68 @@ class CharsArray
     @bg_color = :light_white
   end
 
+  def height
+    self.rows.count
+  end
+
+  def width
+    self.rows[0].count
+  end
+
   # Converts the board to characters, then highlights.
   # Don't use this on the taken pieces.
-  def characters_array(arr)    # That's a terrible name.
-    initial_convert = board_chars(arr)
-    highlight_squares(initial_convert)
+  def characters_array    # That's a terrible name.
+    base_chars
+    highlight_squares
+    self.rows
   end
 
-  def highlight_squares(arr)      #horrible names errywhere
+  def highlight_squares     #horrible names errywhere
     unless self.board.prev_pos.nil?
       selected_piece = self.board[self.board.prev_pos]
-      held_arr = hold_highlight_on_selected_piece(arr)
-      high_arr = highlight_available_moves(selected_piece, held_arr)
-      highlight_cursor(high_arr)
+      hold_highlight_on_selected_piece
+      highlight_available_moves(selected_piece)
+      highlight_cursor
     else
-      highlight_cursor(arr)
+      highlight_cursor
     end
   end
 
-  def hold_highlight_on_selected_piece(arr)
+  def hold_highlight_on_selected_piece
     pos = board.prev_pos
-    arr[pos[0]][pos[1]] = arr[pos[0]][pos[1]].colorize(:background => :cyan)
-    arr
+    self[pos] = self[pos].colorize(:background => :cyan)
   end
 
-  def highlight_available_moves(selected_piece, arr)
-    unless selected_piece.nil? || selected_piece.color != turn
-      selected_piece.valid_moves.each do |move|
-        arr[move[0]][move[1]] = arr[move[0]][move[1]].colorize(:background => :green)
-      end
+  def highlight_available_moves(selected_piece)
+    selected_piece.valid_moves.each do |move|
+      self[move] = self[move].colorize(:background => :green)
     end
-    arr
   end
 
-  def highlight_cursor(arr)
+  def highlight_cursor
     pos = board.cursor.pos
-    arr[pos[0]][pos[1]] = arr[pos[0]][pos[1]].colorize(:background => :cyan)
-    arr
+    self[pos] = self[pos].colorize(:background => :cyan)
   end
 
-
-  def board_chars(arr)
-    height = arr.count
-    width = arr[0].count
-
-    converted = Array.new (height) { Array.new (width) }
-
+  def base_chars
     height.times do |y|
-      converted[y] = convert_to_chars(arr[y])
-      converted[y].each_with_index do |char, x|
-        converted[y][x] = char.colorize( :background => background_color_swap )
+      self.rows[y] = board.rows[y].render
+      self.rows[y].each_with_index do |char, x|
+        self[[y, x]] = char.colorize( :background => background_color_swap )
       end
 
       background_color_swap
     end
-    converted
   end
 
   def background_color_swap
     @bg_color =  BG_SWAP[@bg_color]
   end
 
-  def convert_to_chars(arr)
-    num_pieces = arr.count
+end
 
-    converted = []
-    arr.each { |piece| converted << piece.render }
-    converted
+class Array
+  def render
+    self.map { |piece| piece.render }
   end
-
 end

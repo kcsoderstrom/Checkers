@@ -48,13 +48,17 @@ class Board
     color == COLORS[0] ? COLORS[1] : COLORS[0]
   end
 
-  def move(start, end_pos, color)       # GETTING A FUNNY YOU-CAN-JUMP ERROR NOO
+  def move(start, end_pos, color)
     raise_move_errors(start, end_pos, color)
 
-    if jump?(start, end_pos)
+    jump = jump?(start, end_pos)
+
+    if jump
       taken_piece_pos = middle(start, end_pos)
+
       taken_piece = self[taken_piece_pos]
       self[taken_piece_pos] = nil
+
       unless taken_piece.nil?
         (taken_piece.color == :white ? takens[0] : takens[1]) << taken_piece
       end
@@ -74,7 +78,7 @@ class Board
       moved_piece = King.new(self, moved_piece.color, moved_piece.pos)
     end
 
-    if jump?(start, end_pos)
+    if jump
       unless moved_piece.jump_moves.empty?
         raise ArgumentError.new("Go again") # hacky?
       end
@@ -143,11 +147,11 @@ class Board
   end
 
   def render(turn)
-    characters_array = CharsArray.new(self, turn).characters_array(self.rows)
-    white_chars = CharsArray.new(self, turn).convert_to_chars(takens[0])
-    black_chars = CharsArray.new(self, turn).convert_to_chars(takens[1])
-    white_chars.sort!
-    black_chars.sort!       #should probably sort the pieces really
+    characters_array = CharsArray.new(self, turn).characters_array
+
+    white_chars = takens[0].render.sort!
+    black_chars = takens[1].render.sort!
+        #should probably sort the pieces really
 
     str = ''
     str << white_chars.drop(8).join << "\n"
