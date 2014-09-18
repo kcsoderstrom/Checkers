@@ -1,0 +1,248 @@
+--- &1 !ruby/object:Board
+rows:
+- - !ruby/object:Piece
+    color: :black
+    pos:
+    - 0
+    - 0
+    board: *1
+    first_move: true
+    delta: 1
+  - 
+  - !ruby/object:Piece
+    color: :black
+    pos:
+    - 0
+    - 2
+    board: *1
+    first_move: true
+    delta: 1
+  - 
+  - !ruby/object:Piece
+    color: :black
+    pos:
+    - 0
+    - 4
+    board: *1
+    first_move: true
+    delta: 1
+  - 
+  - !ruby/object:Piece
+    color: :black
+    pos:
+    - 0
+    - 6
+    board: *1
+    first_move: true
+    delta: 1
+  - 
+- - 
+  - !ruby/object:Piece
+    color: :black
+    pos:
+    - 1
+    - 1
+    board: *1
+    first_move: true
+    delta: 1
+  - 
+  - !ruby/object:Piece
+    color: :black
+    pos:
+    - 1
+    - 3
+    board: *1
+    first_move: true
+    delta: 1
+  - 
+  - !ruby/object:Piece
+    color: :black
+    pos:
+    - 1
+    - 5
+    board: *1
+    first_move: true
+    delta: 1
+  - 
+  - !ruby/object:Piece
+    color: :black
+    pos:
+    - 1
+    - 7
+    board: *1
+    first_move: true
+    delta: 1
+- - !ruby/object:Piece
+    color: :black
+    pos:
+    - 2
+    - 0
+    board: *1
+    first_move: true
+    delta: 1
+  - 
+  - !ruby/object:Piece
+    color: :white
+    pos:
+    - 2
+    - 2
+    board: *1
+    first_move: true
+    delta: -1
+  - 
+  - !ruby/object:Piece
+    color: :black
+    pos:
+    - 2
+    - 4
+    board: *1
+    first_move: true
+    delta: 1
+  - 
+  - !ruby/object:Piece
+    color: :black
+    pos:
+    - 2
+    - 6
+    board: *1
+    first_move: true
+    delta: 1
+  - 
+- - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+- - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+- - 
+  - !ruby/object:Piece
+    color: :white
+    pos:
+    - 5
+    - 1
+    board: *1
+    first_move: true
+    delta: -1
+  - 
+  - !ruby/object:Piece
+    color: :white
+    pos:
+    - 5
+    - 3
+    board: *1
+    first_move: true
+    delta: -1
+  - 
+  - 
+  - 
+  - !ruby/object:Piece
+    color: :white
+    pos:
+    - 5
+    - 7
+    board: *1
+    first_move: true
+    delta: -1
+- - !ruby/object:Piece
+    color: :white
+    pos:
+    - 6
+    - 0
+    board: *1
+    first_move: true
+    delta: -1
+  - 
+  - !ruby/object:Piece
+    color: :white
+    pos:
+    - 6
+    - 2
+    board: *1
+    first_move: true
+    delta: -1
+  - 
+  - !ruby/object:Piece
+    color: :white
+    pos:
+    - 6
+    - 4
+    board: *1
+    first_move: true
+    delta: -1
+  - 
+  - !ruby/object:Piece
+    color: :white
+    pos:
+    - 6
+    - 6
+    board: *1
+    first_move: true
+    delta: -1
+  - 
+- - 
+  - !ruby/object:Piece
+    color: :white
+    pos:
+    - 7
+    - 1
+    board: *1
+    first_move: true
+    delta: -1
+  - 
+  - !ruby/object:Piece
+    color: :white
+    pos:
+    - 7
+    - 3
+    board: *1
+    first_move: true
+    delta: -1
+  - 
+  - !ruby/object:Piece
+    color: :white
+    pos:
+    - 7
+    - 5
+    board: *1
+    first_move: true
+    delta: -1
+  - 
+  - !ruby/object:Piece
+    color: :white
+    pos:
+    - 7
+    - 7
+    board: *1
+    first_move: true
+    delta: -1
+cursor: !ruby/object:Cursor
+  width: 8
+  height: 8
+  row: 2
+  col: 2
+prev_pos: 
+end_of_turn: false
+clock: !ruby/object:ChessClock
+  white_time: 3.5537929999999998
+  black_time: 1.1430060000000002
+  white_current_time: 0
+  black_current_time: 0
+  last_tick: 2014-09-18 13:15:24.345162000 -04:00
+takens:
+- []
+- - !ruby/object:Piece
+    color: :black
+    pos: 
+    board: *1
+    first_move: true
+    delta: 1

@@ -90,6 +90,10 @@ class Piece
     true
   end
 
+  def render
+    color == :white ? '○' : '●'
+  end
+
   protected
   attr_writer :pos
 
@@ -106,4 +110,14 @@ class King < Piece
     down_moves + up_moves
   end
 
+  def render
+    color == :white ? '♕' : '♛'
+  end
+
+end
+
+class NilClass
+  def render
+    ' '
+  end
 end
