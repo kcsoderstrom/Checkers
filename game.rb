@@ -13,7 +13,7 @@ class Game
   def initialize(board = Board.new, title_screen = TitleScreen.new(board))
     @board = board
     @title_screen = title_screen
-    @turn = :white
+    @turn = :red
   end
 
   def mode_hash
@@ -34,6 +34,7 @@ class Game
     until won?
       board.clock.change_time(@turn)
       self.board.end_of_turn = false
+      board.select_only_legal_piece(@turn)
       until self.board.end_of_turn
         play_turn
       end
@@ -45,7 +46,6 @@ class Game
 
   def play_turn
     clear_screen
-    board.select_only_legal_piece(@turn)
     board.display(@turn)
     process_action(get_chr, :board_mode)
     board.clock.tick(@turn)
@@ -73,13 +73,13 @@ class Game
 
   def won?    #awful horrible no
     return true if self.board.pieces(:black).empty?
-    return true if self.board.pieces(:white).empty?
-    return true if self.board.pieces(:white).all? { |p| p.valid_moves.empty? }
+    return true if self.board.pieces(:red).empty?
+    return true if self.board.pieces(:red).all? { |p| p.valid_moves.empty? }
     return true if self.board.pieces(:black).all? { |p| p.valid_moves.empty? }
   end
 
   def swap_turns
-    @turn == :white ? @turn = :black : @turn = :white
+    @turn == :red ? @turn = :black : @turn = :red
   end
 
   def process_action(chr, mode)

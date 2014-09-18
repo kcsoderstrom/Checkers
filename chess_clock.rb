@@ -9,7 +9,7 @@ class ChessClock
   end
 
   def change_time(color)
-    if color == :white
+    if color == :red
       @black_time += @black_current_time
     else
       @white_time += @white_current_time
@@ -18,7 +18,7 @@ class ChessClock
   end
 
   def tick(color)
-    if color == :white
+    if color == :red
       @white_current_time += Time.now - @last_tick
     else
       @black_current_time += Time.now - @last_tick

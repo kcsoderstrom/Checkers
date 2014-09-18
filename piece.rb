@@ -3,12 +3,12 @@ require_relative 'checkers_errors'
 
 class Piece
 
-  COLOR_DIR = { :black => 1, :white => -1 }
+  COLOR_DIR = { :black => 1, :red => -1 }
 
   include CheckersErrors
   attr_reader :board, :color, :pos
 
-  def initialize(board = Board.new, color = :white, pos = [0, 0])
+  def initialize(board = Board.new, color = :red, pos = [0, 0])
     @color = color
     @pos = pos
     @board = board
@@ -60,7 +60,7 @@ class Piece
   end
 
   def at_end?
-    self.color == :white ? self.pos[0] == 0 : self.pos[0] == 7
+    self.color == :red ? self.pos[0] == 0 : self.pos[0] == 7
   end
 
   def on_board?(pos)
@@ -78,7 +78,7 @@ class Piece
   end
 
   def render
-    color == :white ? '○' : '●'
+    '◉'.colorize(color)
   end
 
   protected
@@ -98,7 +98,7 @@ class King < Piece
   end
 
   def render
-    color == :white ? '♕' : '♛'
+    '◎'.colorize(color)
   end
 
 end

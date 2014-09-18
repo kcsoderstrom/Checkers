@@ -13,7 +13,7 @@ class Board
   include PlaneLike
   include CheckersErrors
 
-  COLORS = [:white, :black]
+  COLORS = [:red, :black]
 
   attr_reader :cursor, :prev_pos, :clock, :upgrade_cursor
   attr_accessor :end_of_turn, :takens
@@ -46,6 +46,7 @@ class Board
     selectables = self.pieces(turn).reject { |piece| piece.jump_moves.empty? }
     if selectables.count == 1
       self.prev_pos = selectables[0].pos
+      cursor.pos = prev_pos
     end
   end
 
@@ -61,7 +62,7 @@ class Board
     taken_piece_pos = middle(start, end_pos)
     taken_piece = self[taken_piece_pos]
     self[taken_piece_pos] = nil
-    taken_box = ( taken_piece.color == :white ? takens[0] : takens[1] )
+    taken_box = ( taken_piece.color == :red ? takens[0] : takens[1] )
     taken_box << taken_piece
   end
 
@@ -157,20 +158,20 @@ class Board
   private
   attr_accessor :mode
   def taken_pieces(color)
-    color == :white ? takens[0] : takens[1]
+    color == :red ? takens[0] : takens[1]
   end
 
   def place_pieces      # kinda illegible
     8.times do |col|
       rows[col % 2][col] = Piece.new(self, :black, [col % 2, col])
       rows[2][(2 * col) % 8] = Piece.new(self, :black, [2, (2 * col) % 8])
-      rows[6 + (col % 2)][col] = Piece.new(self, :white, [6 + (col % 2), col])
-      rows[5][(2 * col +1) % 8] = Piece.new(self, :white, [5, (2 * col + 1) % 8])
+      rows[6 + (col % 2)][col] = Piece.new(self, :red, [6 + (col % 2), col])
+      rows[5][(2 * col +1) % 8] = Piece.new(self, :red, [5, (2 * col + 1) % 8])
     end
   end
 
   def render(turn)
-    characters_array = CharsArray.new(self, turn).characters_array
+    characters_array = CharsArray.new(self, turn).rows.map
 
     white_chars = takens[0].render.sort
     black_chars = takens[1].render.sort
