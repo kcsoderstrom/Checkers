@@ -6,14 +6,6 @@ class CharsArray
 
   include PlaneLike
 
-  WHITE_CHARS = { Piece => '○',
-                  King => '♕',
-                  NilClass => ' '}
-
-  BLACK_CHARS = { Piece => '●',
-                  King => '♛',
-                  NilClass => ' '}
-
   BG_COLORS = [:light_white, :light_black]
   BG_SWAP = { BG_COLORS[0] => BG_COLORS[1],
               BG_COLORS[1] => BG_COLORS[0] }
@@ -27,27 +19,18 @@ class CharsArray
     @bg_color = :light_white
   end
 
-  def height
-    self.rows.count
-  end
-
-  def width
-    self.rows[0].count
-  end
-
   # Converts the board to characters, then highlights.
   # Don't use this on the taken pieces.
   def characters_array    # That's a terrible name.
-    base_chars
+    convert_without_highlight
     highlight_squares
     self.rows
   end
 
   def highlight_squares     #horrible names errywhere
-    unless self.board.prev_pos.nil?
-      selected_piece = self.board[self.board.prev_pos]
+    unless board.selected_piece.nil?
       hold_highlight_on_selected_piece
-      highlight_available_moves(selected_piece)
+      highlight_available_moves(board.selected_piece)
       highlight_cursor
     else
       highlight_cursor
@@ -70,8 +53,8 @@ class CharsArray
     self[pos] = self[pos].colorize(:background => :cyan)
   end
 
-  def base_chars
-    height.times do |y|
+  def convert_without_highlight
+    self.rows.count.times do |y|
       self.rows[y] = board.rows[y].render
       self.rows[y].each_with_index do |char, x|
         self[[y, x]] = char.colorize( :background => background_color_swap )

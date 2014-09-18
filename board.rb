@@ -4,14 +4,14 @@ require_relative 'cursor'
 require_relative 'chars_array'
 require_relative 'plane_like'
 require_relative 'chess_clock'
-require_relative 'chess_errors'
+require_relative 'checkers_errors'
 require_relative 'symbol'
 require 'colorize'
 
 class Board
 
   include PlaneLike
-  include ChessErrors
+  include CheckersErrors
 
   COLORS = [:white, :black]
 
@@ -29,6 +29,8 @@ class Board
   end
 
   def click(turn)
+    #select_only_legal_piece(turn)
+
     pos = cursor.pos
 
     if self.prev_pos.nil?
@@ -36,38 +38,59 @@ class Board
     else
       begin
         move(self.prev_pos, pos, turn)
-        self.end_of_turn = true
-      rescue ArgumentError
+      rescue CheckersError
         self.prev_pos = nil   # clicked in a bad spot so resets
       end
-      self.prev_pos = nil
     end
+  end
+
+  def select_only_legal_piece(turn)
+    selectable = self.pieces(turn).reject { |piece| piece.jump_moves.empty? }
+    if selectable.count == 1
+      self.prev_pos = selectable[0].pos
+    end
+  end
+
+  def selected_piece
+    self[self.prev_pos] unless self.prev_pos.nil?
   end
 
   def opposite(color)
     color == COLORS[0] ? COLORS[1] : COLORS[0]
   end
 
-  def move(start, end_pos, color)
+  def take(start, end_pos)
+    taken_piece_pos = middle(start, end_pos)
+    taken_piece = self[taken_piece_pos]
+    self[taken_piece_pos] = nil
+    taken_box = ( taken_piece.color == :white ? takens[0] : takens[1] )
+    taken_box << taken_piece
+  end
+
+  def jump(start, end_pos, color)
     raise_move_errors(start, end_pos, color)
 
-    jump = jump?(start, end_pos)
+    self.take(start, end_pos)
 
-    if jump
-      taken_piece_pos = middle(start, end_pos)
+    self[start].move(end_pos)
 
-      taken_piece = self[taken_piece_pos]
-      self[taken_piece_pos] = nil
+    moved_piece = self[end_pos]
 
-      unless taken_piece.nil?
-        (taken_piece.color == :white ? takens[0] : takens[1]) << taken_piece
-      end
-      taken_piece.move(nil)   #kinda hacky
-    else
-      unless all_pieces(color).reject { |piece| piece.jump_moves.empty? }.empty?
-        raise ArgumentError.new("You have to jump if you can.")
-      end
+    unless moved_piece.is_a?(King) || !moved_piece.at_end?
+      moved_piece = King.new(self, moved_piece.color, moved_piece.pos)
     end
+
+    if self[end_pos].jump_moves.empty?
+      self.end_of_turn = true
+      self.prev_pos = nil
+    else
+      self.end_of_turn = false
+      self.prev_pos = end_pos
+    end
+  end
+
+  def slide(start, end_pos, color)
+    raise_move_errors(start, end_pos, color)
 
     self[start], self[end_pos] = nil, self[start]
 
@@ -78,12 +101,16 @@ class Board
       moved_piece = King.new(self, moved_piece.color, moved_piece.pos)
     end
 
-    if jump
-      unless moved_piece.jump_moves.empty?
-        raise ArgumentError.new("Go again") # hacky?
-      end
-    end
+    self.end_of_turn = true
+    self.prev_pos = nil     #deselects cursor
+  end
 
+  def move(start, end_pos, color)
+    if jump?(start, end_pos)
+      jump(start, end_pos, color)
+    else
+      slide(start, end_pos, color)
+    end
   end
 
   def jump?(pos1, pos2)
@@ -91,12 +118,12 @@ class Board
   end
 
   def cursor_move(sym,turn)
-    if sym == :r
+    if sym == :" "
       self.click(turn)
     elsif sym == :o
       return :title_mode
     else
-      cursor.cursor_move(sym)
+      cursor.scroll(sym)
     end
     :board_mode
   end
@@ -114,7 +141,7 @@ class Board
     duped
   end
 
-  def all_pieces(color)
+  def pieces(color)
     self.rows.flatten.compact.select { |piece| piece.color == color }
   end
 
@@ -125,8 +152,6 @@ class Board
   def middle(pos1, pos2)
     [(pos1[0] + pos2[0]) / 2, (pos1[1] + pos2[1]) / 2]
   end
-
-
 
   protected
   attr_writer :prev_pos
@@ -149,9 +174,8 @@ class Board
   def render(turn)
     characters_array = CharsArray.new(self, turn).characters_array
 
-    white_chars = takens[0].render.sort!
-    black_chars = takens[1].render.sort!
-        #should probably sort the pieces really
+    white_chars = takens[0].render.sort
+    black_chars = takens[1].render.sort
 
     str = ''
     str << white_chars.drop(8).join << "\n"

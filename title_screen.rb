@@ -26,8 +26,8 @@ class TitleScreen
   end
 
   def cursor_move(sym, turn)
-    unless sym == :r
-      cursor.cursor_move(sym)
+    unless sym == :" "
+      cursor.scroll(sym)
     else
       choose_option
     end

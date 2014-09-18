@@ -7,7 +7,6 @@ class Piece
 
   include CheckersErrors
   attr_reader :board, :color, :pos
-  attr_accessor :first_move
 
   def initialize(board = Board.new, color = :white, pos = [0, 0])
     @color = color
@@ -21,6 +20,8 @@ class Piece
   attr_reader :delta
 
   def move(new_pos)
+    board[self.pos] = nil
+    board[new_pos] = self
     self.pos = new_pos
   end
 
@@ -71,23 +72,9 @@ class Piece
   end
 
   def valid_moves
-    return legal_jump_moves unless legal_jump_moves.empty?
-
-    if board.all_pieces(color).all? { |piece| piece.legal_jump_moves.empty? }
-      moves.select { |move| legal?(move) }
-    else
-      []
-    end
-  end
-
-  def legal?(new_pos)
-    test_board = self.board.dup
-    begin
-      test_board.raise_move_errors(self.pos, new_pos, self.color)
-    rescue ArgumentError
-      return false
-    end
-    true
+    return jump_moves unless jump_moves.empty?
+    return moves if board.pieces(color).all?{ |piece| piece.jump_moves.empty? }
+    []
   end
 
   def render

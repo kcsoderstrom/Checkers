@@ -35,7 +35,7 @@ class Cursor
     [self.row, self.col]
   end
 
-  def cursor_move(sym)
+  def scroll(sym)
     case sym
     when :w
       up
@@ -49,8 +49,6 @@ class Cursor
     when :d
       down
       right
-    when :q
-      exit        #maybe make that nicer later
     end
   end
 

@@ -71,10 +71,10 @@ class Game
   end
 
   def won?    #awful horrible no
-    return true if self.board.all_pieces(:black).empty?
-    return true if self.board.all_pieces(:white).empty?
-    return true if self.board.all_pieces(:white).all? { |p| p.valid_moves.empty? }
-    return true if self.board.all_pieces(:black).all? { |p| p.valid_moves.empty? }
+    return true if self.board.pieces(:black).empty?
+    return true if self.board.pieces(:white).empty?
+    return true if self.board.pieces(:white).all? { |p| p.valid_moves.empty? }
+    return true if self.board.pieces(:black).all? { |p| p.valid_moves.empty? }
   end
 
   def swap_turns
