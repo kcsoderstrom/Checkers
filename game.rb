@@ -45,6 +45,7 @@ class Game
 
   def play_turn
     clear_screen
+    board.select_only_legal_piece(@turn)
     board.display(@turn)
     process_action(get_chr, :board_mode)
     board.clock.tick(@turn)

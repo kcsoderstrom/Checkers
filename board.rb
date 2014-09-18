@@ -29,8 +29,6 @@ class Board
   end
 
   def click(turn)
-    #select_only_legal_piece(turn)
-
     pos = cursor.pos
 
     if self.prev_pos.nil?
@@ -45,9 +43,9 @@ class Board
   end
 
   def select_only_legal_piece(turn)
-    selectable = self.pieces(turn).reject { |piece| piece.jump_moves.empty? }
-    if selectable.count == 1
-      self.prev_pos = selectable[0].pos
+    selectables = self.pieces(turn).reject { |piece| piece.jump_moves.empty? }
+    if selectables.count == 1
+      self.prev_pos = selectables[0].pos
     end
   end
 

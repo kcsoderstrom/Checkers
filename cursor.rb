@@ -31,10 +31,6 @@ class Cursor
     @row = (row + 1) % self.height
   end
 
-  def pos
-    [self.row, self.col]
-  end
-
   def scroll(sym)
     case sym
     when :w
